@@ -3,6 +3,10 @@ from tkinter import *
 from tkinter import ttk
 from playsound import playsound
 
+# Default values
+task = "Task"
+timeToWork = "10"
+
 
 def countdown(t):
     global ProgressBar
@@ -14,7 +18,7 @@ def countdown(t):
 
         ctime = time.time()
         while time.time() < ctime + 1:
-            if secondButtonClicked:
+            if stopClicked:
                 break
             time.sleep(0.05)
             ProgressBar["value"] = timeToWork * 60 - t + (time.time()-ctime)
@@ -23,40 +27,39 @@ def countdown(t):
     playsound('pop.mp3')
 
 
-def start():
-    global clicked
-    clicked = True
+def startFunction():
+    global startClicked
+    startClicked = True
 
 
-def start2():
-    global secondButtonClicked
-    global root
-    secondButtonClicked = True
+def stopFunction():
+    global stopClicked
+    stopClicked = True
 
 
 root = Tk()
 root.title("Work")
 root.geometry("450x210")
-root.attributes('-topmost', True)
+root.attributes('-topmost', True)  # window on top of other windows
 
 while True:
-    clicked = False
+    startClicked = False
 
 # First window  ----------------  First window
     entry1 = Entry(root, font=("Helvetica ", 20))
     entry1.grid(row=0, column=0)
-    entry1.insert(0, "Task")
+    entry1.insert(0, task)
 
     entry2 = Entry(root, font=("Helvetica ", 20))
     entry2.grid(row=1, column=0)
-    entry2.insert(0, "10")
+    entry2.insert(0, timeToWork)
     l1 = Label(root, text="minutes", font=("Helvetica ", 30))
     l1.grid(row=1, column=1)
 
-    b = Button(root, text="Start", command=start, font=("Helvetica ", 30), fg="Green")
+    b = Button(root, text="Start", command=startFunction, font=("Helvetica ", 30), fg="Green")
     b.grid(row=2, column=0)
 
-    while not clicked:
+    while not startClicked:
         root.update()
 
     task = str(entry1.get())
@@ -68,7 +71,7 @@ while True:
 
 
 # SECOND window ------------------------------------------- SECOND window
-    secondButtonClicked = False
+    stopClicked = False
 
     taskLabel = Label(root, text=task, fg='green', justify="center", font=("Helvetica ", 40))
     taskLabel.pack()
@@ -80,7 +83,7 @@ while True:
     ProgressBar.pack()
     ProgressBar["maximum"] = timeToWork*60
 
-    button = Button(root, text="stop", command=start2, font=("Helvetica ", 10), bg="Green", width= 420)
+    button = Button(root, text="stop", command=stopFunction, font=("Helvetica ", 10), bg="Green", width= 420)
     button.pack()
 
     countdown(round(timeToWork*60))
